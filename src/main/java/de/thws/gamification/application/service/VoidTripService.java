@@ -3,13 +3,17 @@ package de.thws.gamification.application.service;
 import de.thws.gamification.application.ports.in.VoidTripUseCase;
 import de.thws.gamification.application.ports.out.TripReportRepository;
 import de.thws.gamification.domain.model.TripReport;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
-
+@ApplicationScoped
 public class VoidTripService implements VoidTripUseCase {
 
     private final TripReportRepository tripReportRepository;
+
+   @Inject
     public VoidTripService(TripReportRepository tripReportRepository) {
         this.tripReportRepository = tripReportRepository;
     }

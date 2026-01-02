@@ -28,7 +28,7 @@ public class LeaderboardEntry {
         return username;
     }
 
-    public int getTotalPoints() {
+    public int getPoints() {
         return totalPoints;
     }
 

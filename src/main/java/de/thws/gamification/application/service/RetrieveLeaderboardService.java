@@ -5,14 +5,16 @@ import de.thws.gamification.application.ports.out.DriverProfileRepository;
 import de.thws.gamification.domain.model.DriverProfile;
 import de.thws.gamification.domain.model.LeaderboardEntry;
 import de.thws.gamification.domain.model.Period;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@ApplicationScoped
 public class RetrieveLeaderboardService implements RetrieveLeaderboardQuery  {
 
     private final DriverProfileRepository driverProfileRepository;
-
+@Inject
     public RetrieveLeaderboardService(DriverProfileRepository driverProfileRepository) {
         this.driverProfileRepository = driverProfileRepository;
     }

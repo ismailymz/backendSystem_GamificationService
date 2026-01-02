@@ -6,6 +6,7 @@ import de.thws.gamification.domain.model.DriverAchievement;
 import de.thws.gamification.domain.model.DriverProfile;
 import de.thws.gamification.domain.model.TripReport;
 import io.smallrye.mutiny.vertx.codegen.lang.NewInstanceWithGenericsMethodCodeWriter;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Driver;
 import java.time.LocalDateTime;
