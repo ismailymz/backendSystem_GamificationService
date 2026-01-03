@@ -13,7 +13,7 @@ public class DriverProfileTest {
    @Test
      void newDriver_shouldStartWithZeroPointsAndNoAchievements(){
 
-         DriverProfile driver =DriverProfile.newDriver("ismail");
+         DriverProfile driver =DriverProfile.createProfile("ismail");
 
                  assertNotNull(driver.getId(), "id null olmamalı");
          assertEquals("ismail", driver.getUsername());
@@ -24,14 +24,14 @@ public class DriverProfileTest {
 
     @Test
     void addPoints_shouldIncreaseTotalPoints() {
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
         driver.addPoints(30);
         assertEquals(30, driver.getTotalPoints());
     }
     @Test
     void addPoints_negative_shouldThrowException() {
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
         assertThrows(IllegalArgumentException.class,
                 () -> driver.addPoints(-5),
@@ -39,7 +39,7 @@ public class DriverProfileTest {
     }
     @Test
     void addAchievement_shouldStoreAchievement() {
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
         Achievement achievement = Achievement.of(
                 "SAFE_TRIP",
@@ -62,7 +62,7 @@ public class DriverProfileTest {
 
     @Test
     void getEarnedAchievements_shouldBeUnmodifiable() {
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
         Achievement achievement = Achievement.of(
                 "SAFE_TRIP",
@@ -82,7 +82,7 @@ public class DriverProfileTest {
     }
     @Test
     void changeUsername_shouldUpdateUsername() {
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
 
         driver.changeUsername("omer");
@@ -93,7 +93,7 @@ public class DriverProfileTest {
 
     @Test
     void changeUsername_blank_shouldThrowException() {
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
         assertThrows(IllegalArgumentException.class,
                 () -> driver.changeUsername(" "),

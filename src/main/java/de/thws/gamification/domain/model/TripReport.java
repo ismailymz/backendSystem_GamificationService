@@ -4,7 +4,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class TripReport { private final UUID id;
+public class TripReport {
+    private final UUID id;
     private final UUID driverId;
 
     private final int distanceKm;

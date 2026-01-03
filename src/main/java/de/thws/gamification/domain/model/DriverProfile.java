@@ -1,7 +1,5 @@
 package de.thws.gamification.domain.model;
 
-import org.yaml.snakeyaml.events.Event.ID;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,23 +10,21 @@ public class DriverProfile {
     private String username;
     private int totalPoints;
     private final List<DriverAchievement> earnedAchievements=new ArrayList<>();
-public DriverProfile(UUID id,String username,int totalPoints){
-    if(id==null){
-        throw new IllegalArgumentException("id  0 olamaz");
-    }
+public DriverProfile(String username,int totalPoints){
+
     if (username==null||username.isBlank()){
-        throw new IllegalArgumentException("username must not be blank");
+        throw new IllegalArgumentException("Username must not be blank");
     }
     if(totalPoints<0){
-        throw new IllegalArgumentException("totalPoints must not be negative ");
+        throw new IllegalArgumentException("Points can not be negative ");
 
     }
     this.id=UUID.randomUUID();
     this.username=username;
     this.totalPoints=totalPoints;}
 
-    public static  DriverProfile newDriver(String username) {
-        return new DriverProfile(UUID.randomUUID(),username,0);
+    public static DriverProfile createProfile(String username) {
+        return new DriverProfile(username,0);
     }
 
     public void addPoints(int pointsAdd){
@@ -41,7 +37,7 @@ public DriverProfile(UUID id,String username,int totalPoints){
 
     public void addAchievement(DriverAchievement achievement){
     if(achievement==null){
-        throw new IllegalArgumentException("achievement 0 olmaz");
+        throw new IllegalArgumentException("achievement can not be null");
     }
     this.earnedAchievements.add(achievement);
     }

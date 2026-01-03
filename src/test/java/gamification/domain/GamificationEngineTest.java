@@ -22,7 +22,7 @@ public class GamificationEngineTest {
     @Test
             void apply_shouldAddPointsAndNewAchievement() {
         UUID driverId = UUID.randomUUID();
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
 
         TripReport report = TripReport.newReport(
                 driverId,          // driverId

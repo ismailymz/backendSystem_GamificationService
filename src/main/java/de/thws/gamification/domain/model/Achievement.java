@@ -25,6 +25,8 @@ public class Achievement {
         this.name=name;
         this.description=description;
     }
+
+
     public static Achievement of(String code, String name, String description){
         return new Achievement(UUID.randomUUID(),code,name,description);
     }

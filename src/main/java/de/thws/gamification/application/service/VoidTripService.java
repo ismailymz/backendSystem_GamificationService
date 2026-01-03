@@ -20,7 +20,7 @@ public class VoidTripService implements VoidTripUseCase {
 
     public void voidTrip(UUID tripId){
         if (tripId==null){
-            throw new IllegalArgumentException("tripıd 0 olamaz");
+            throw new IllegalArgumentException("trip id 0 olamaz");
         }
         TripReport report = tripReportRepository.findById(tripId)
                 .orElseThrow(()->new NoSuchElementException("trip bulunamadı:"+tripId));

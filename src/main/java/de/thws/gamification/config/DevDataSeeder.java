@@ -18,9 +18,9 @@ public class DevDataSeeder {
 
     void onStart(@Observes StartupEvent ev) {
 
-        // 2 demo driver
-        DriverProfile ismail = DriverProfile.newDriver("ismail");
-        DriverProfile erkin  = DriverProfile.newDriver("erkin");
+        // 2 demo drivers
+        DriverProfile ismail = DriverProfile.createProfile("ismail");
+        DriverProfile erkin  = DriverProfile.createProfile("erkin");
 
         // leaderboard’da fark görünsün diye erkin’e puan ekleyelim
         erkin.addPoints(200);

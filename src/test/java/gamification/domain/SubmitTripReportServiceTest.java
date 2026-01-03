@@ -29,7 +29,7 @@ class SubmitTripReportServiceTest {
         InMemoryDriverAchievementRepository achievementRepo = new InMemoryDriverAchievementRepository();
 
         // Başlangıçta 0 puanlı bir driver oluşturalım
-        DriverProfile driver = DriverProfile.newDriver("yusuf");
+        DriverProfile driver = DriverProfile.createProfile("yusuf");
         UUID driverId = driver.getId();
         driverRepo.save(driver);
 
