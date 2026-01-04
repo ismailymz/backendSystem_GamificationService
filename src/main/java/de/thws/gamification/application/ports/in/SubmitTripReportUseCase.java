@@ -10,10 +10,5 @@ public interface SubmitTripReportUseCase {
 
 
 
-
-
-
-
-
    GamificationResult submitTrip(UUID driverId, TripReport report);
 }

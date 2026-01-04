@@ -21,7 +21,23 @@ public DriverProfile(String username,int totalPoints){
     }
     this.id=UUID.randomUUID();
     this.username=username;
-    this.totalPoints=totalPoints;}
+    this.totalPoints=totalPoints;
+}
+
+    //This constructor is for only Mapper
+public DriverProfile(UUID id,String username,int totalPoints){
+    if(id == null){throw new IllegalArgumentException("id must not be null");}
+    if (username==null||username.isBlank()){
+        throw new IllegalArgumentException("Username must not be blank");
+    }
+    if(totalPoints<0){
+        throw new IllegalArgumentException("Points can not be negative ");
+
+    }
+    this.id=id;
+    this.username=username;
+    this.totalPoints=totalPoints;
+}
 
     public static DriverProfile createProfile(String username) {
         return new DriverProfile(username,0);

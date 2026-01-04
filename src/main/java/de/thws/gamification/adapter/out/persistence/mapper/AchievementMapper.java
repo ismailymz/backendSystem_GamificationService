@@ -1,10 +1,12 @@
 package de.thws.gamification.adapter.out.persistence.mapper;
 import de.thws.gamification.adapter.out.persistence.entity.AchievementEntity;
 import de.thws.gamification.domain.model.Achievement;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class AchievementMapper {
 
     //to Entity
