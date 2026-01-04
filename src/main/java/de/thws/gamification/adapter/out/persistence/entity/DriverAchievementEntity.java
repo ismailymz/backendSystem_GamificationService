@@ -59,14 +59,6 @@ public class DriverAchievementEntity {
     public void setEarnedAt(LocalDateTime earnedAt) {
         this.earnedAt = earnedAt;
     }
-    @Override
-    public String toString() {
-        return "DriverAchievementEntity{" +
-                "id=" + id +
-                ", driver=" + driver +
-                ", achievement=" + achievement +
-                ", earnedAt=" + earnedAt +
-                '}';
-    }
+
 
 }
