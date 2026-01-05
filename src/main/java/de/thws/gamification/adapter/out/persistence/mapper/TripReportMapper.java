@@ -1,33 +1,35 @@
 package de.thws.gamification.adapter.out.persistence.mapper;
 
+import de.thws.gamification.adapter.out.persistence.entity.DriverProfileEntity;
 import de.thws.gamification.adapter.out.persistence.entity.TripReportEntity;
 import de.thws.gamification.domain.model.DriverProfile;
 import de.thws.gamification.domain.model.TripReport;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
-
+@ApplicationScoped
 public class TripReportMapper {
     @Inject
     DriverProfileMapper driverProfileMapper;
 
     //To Entity
 
-    public TripReportEntity toEntity(TripReport tripReport, DriverProfile driverProfile){
-        final var returnResult = new TripReportEntity();
-        returnResult.setId(tripReport.getId());
-        returnResult.setDriver(driverProfileMapper.toEntity(driverProfile));
-        returnResult.setDistanceKm(tripReport.getDistanceKm());
-        returnResult.setBrakeCount(tripReport.getBrakeCount());
-        returnResult.setHardAccelerationCount(tripReport.getHardAccelerationCount());
-        returnResult.setNightTrip(tripReport.isNightTrip());
-        returnResult.setStartedAt(tripReport.getStartedAt());
-        returnResult.setEndedAt(tripReport.getEndedAt());
-        return returnResult;
+    public TripReportEntity toEntity(TripReport report, DriverProfileEntity driverRef) {
+        TripReportEntity e = new TripReportEntity();
+        e.setId(report.getId());
+        e.setDriver(driverRef);
+        e.setDistanceKm(report.getDistanceKm());
+        e.setBrakeCount(report.getBrakeCount());
+        e.setHardAccelerationCount(report.getHardAccelerationCount());
+        e.setNightTrip(report.isNightTrip());
+        e.setStartedAt(report.getStartedAt());
+        e.setEndedAt(report.getEndedAt());
+        return e;
     }
 
-    public List<TripReportEntity> toEntity(List<TripReport> tripReports, DriverProfile driverProfile){
-        return tripReports.stream().map(tr -> toEntity(tr, driverProfile)).toList();
+    public List<TripReportEntity> toEntity(List<TripReport> tripReports, DriverProfileEntity driverRef){
+        return tripReports.stream().map(tr -> toEntity(tr, driverRef)).toList();
     }
 
     //To Domain
