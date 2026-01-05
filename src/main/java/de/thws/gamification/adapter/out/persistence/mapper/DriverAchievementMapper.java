@@ -4,11 +4,12 @@ import de.thws.gamification.adapter.out.persistence.entity.AchievementEntity;
 import de.thws.gamification.adapter.out.persistence.entity.DriverAchievementEntity;
 import de.thws.gamification.adapter.out.persistence.entity.DriverProfileEntity;
 import de.thws.gamification.domain.model.DriverAchievement;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
+@ApplicationScoped
 public class DriverAchievementMapper {
     @Inject
     private AchievementMapper achievementMapper;

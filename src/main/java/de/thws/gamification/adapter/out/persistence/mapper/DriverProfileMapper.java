@@ -5,9 +5,9 @@ import de.thws.gamification.domain.model.DriverProfile;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
-
+@ApplicationScoped
 public class DriverProfileMapper {
-    @ApplicationScoped
+
     //To Entity
     public DriverProfileEntity toEntity(DriverProfile driverProfile){
         final var returnValue = new DriverProfileEntity();

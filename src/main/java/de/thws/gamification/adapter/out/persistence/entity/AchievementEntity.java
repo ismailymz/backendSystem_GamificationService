@@ -13,8 +13,9 @@ public class AchievementEntity {
 
     @OneToMany(mappedBy = "achievement")
     private List<DriverAchievementEntity> earnedAchievements = new ArrayList<>();
-
+    @Column(unique = true)
     private String code;
+
     private String name;
     private String description;
 
