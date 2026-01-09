@@ -7,7 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ApplicationScoped
+
 public class InMemoryAchievementRepository implements AchievementRepository {
 
     private final Map<UUID, Achievement> store = new ConcurrentHashMap<>();

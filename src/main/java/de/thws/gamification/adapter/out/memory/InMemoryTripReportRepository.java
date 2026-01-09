@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-@ApplicationScoped
+
 public class InMemoryTripReportRepository implements TripReportRepository {
 
     private final Map<UUID, TripReport> store = new ConcurrentHashMap<>();

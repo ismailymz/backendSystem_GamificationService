@@ -7,7 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ApplicationScoped
+
 public class InMemoryDriverProfileRepository implements DriverProfileRepository {
 
     private final Map<UUID, DriverProfile> store = new ConcurrentHashMap<>();
