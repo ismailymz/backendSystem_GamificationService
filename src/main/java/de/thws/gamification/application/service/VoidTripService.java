@@ -1,10 +1,14 @@
 package de.thws.gamification.application.service;
 
 import de.thws.gamification.application.ports.in.VoidTripUseCase;
+import de.thws.gamification.application.ports.out.DriverAchievementRepository;
+import de.thws.gamification.application.ports.out.DriverProfileRepository;
 import de.thws.gamification.application.ports.out.TripReportRepository;
 import de.thws.gamification.domain.model.TripReport;
+import de.thws.gamification.domain.service.GamificationEngine;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -12,27 +16,56 @@ import java.util.UUID;
 public class VoidTripService implements VoidTripUseCase {
 
     private final TripReportRepository tripReportRepository;
+    private final DriverProfileRepository driverProfileRepository;
+    private final DriverAchievementRepository driverAchievementRepository;
+    private final GamificationEngine gamificationEngine;
 
    @Inject
-    public VoidTripService(TripReportRepository tripReportRepository) {
+    public VoidTripService(TripReportRepository tripReportRepository, DriverProfileRepository driverProfileRepository,DriverAchievementRepository driverAchievementRepository,GamificationEngine gamificationEngine) {
         this.tripReportRepository = tripReportRepository;
+        this.driverProfileRepository = driverProfileRepository;
+        this.driverAchievementRepository= driverAchievementRepository;
+        this.gamificationEngine=gamificationEngine;
     }
 
-    public void voidTrip(UUID tripId){
-        if (tripId==null){
+    @Override
+    @Transactional
+    public void voidTrip(UUID tripId) {
+
+        if (tripId == null) {
             throw new IllegalArgumentException("trip id 0 olamaz");
         }
-        TripReport report = tripReportRepository.findById(tripId)
-                .orElseThrow(()->new NoSuchElementException("trip bulunamadı:"+tripId));
-        // 2) Zaten void ise bir şey yapmaya gerek yok (idempotent davranış)
 
-        if (report.isVoided()){
+        TripReport report = tripReportRepository.findById(tripId)
+                .orElseThrow(() ->
+                        new NoSuchElementException("trip bulunamadı:" + tripId));
+
+        //idempotent
+        if (report.isVoided()) {
             return;
         }
 
         report.markVoided();
-
         tripReportRepository.save(report);
+
+        var driver = driverProfileRepository.findById(report.getDriverId())
+                .orElseThrow(() ->
+                        new NoSuchElementException("driver bulunamadı"));
+
+        //Driver state reset
+        driver.resetPoints();
+        driver.clearAchievements();
+        driverAchievementRepository.deleteByDriverId(driver.getId());
+
+        var validTrips =
+                tripReportRepository.findValidByDriverId(driver.getId());
+
+        for (TripReport t : validTrips) {
+            gamificationEngine.applyTrip(driver, t);
+        }
+
+        driverProfileRepository.save(driver);
     }
+
 
 }

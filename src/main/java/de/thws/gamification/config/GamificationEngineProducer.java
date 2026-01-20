@@ -22,8 +22,8 @@ public class GamificationEngineProducer {
     @Produces
     @ApplicationScoped
     public GamificationEngine gamificationEngine() {
-        List<ScoringPolicy> policies = scoringPolicies.stream().toList();     // boş olabilir, sorun değil
-        List<AchievementRule> rules = achievementRules.stream().toList();     // boş olabilir, sorun değil
+        List<ScoringPolicy> policies = scoringPolicies.stream().toList();
+        List<AchievementRule> rules = achievementRules.stream().toList();
         return new GamificationEngine(policies, rules);
     }
 }

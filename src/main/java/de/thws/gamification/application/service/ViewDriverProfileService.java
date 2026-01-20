@@ -6,6 +6,7 @@ import de.thws.gamification.domain.model.DriverProfile;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 @ApplicationScoped
@@ -25,6 +26,12 @@ public class ViewDriverProfileService implements ViewDriverProfileQuery {
                     .orElseThrow(()-> new NoSuchElementException("drivercannot found:"+driverId));
 
 
+    }
+
+    @Override
+    public List<DriverProfile> searchDrivers(String username, String role, Integer minScore) {
+        // İş mantığı gerekirse buraya eklenir (örn: loglama)
+        return driverProfileRepository.searchDrivers(username, role, minScore);
     }
 
 

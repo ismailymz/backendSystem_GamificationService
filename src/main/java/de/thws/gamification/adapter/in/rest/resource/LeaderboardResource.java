@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
+
 @Path("/api/leaderboard")
 @Produces(MediaType.APPLICATION_JSON)
 public class LeaderboardResource {
@@ -18,7 +19,6 @@ public class LeaderboardResource {
     @GET
     public LeaderboardResponseDTO getLeaderboard(@QueryParam("period") Period period) {
         if (period == null) {
-            // contract’a göre zorunluysa böyle; değilse default ALL_TIME da yapabiliriz
             throw new BadRequestException("period query param is required (DAILY|WEEKLY|ALL_TIME)");
         }
         var list = retrieveLeaderboardQuery.getLeaderboard(period);

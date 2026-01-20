@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface DriverAchievementRepository {
     List<DriverAchievement> findByDriverId(UUID driverId);
     void saveAll(List<DriverAchievement> achievements);
+    void deleteByDriverId(UUID driverId);
 }

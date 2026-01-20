@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GamificationEngineTest {
     @Test
-            void apply_shouldAddPointsAndNewAchievement() {
+    void applyTrip_shouldAddPointsAndNewAchievement() {
         UUID driverId = UUID.randomUUID();
         DriverProfile driver = DriverProfile.createProfile("yusuf");
 

@@ -16,6 +16,16 @@ public class TripReport {
     private final LocalDateTime startedAt;
     private final LocalDateTime endedAt;
     private boolean voided;
+    private int totalScore; // Hesaplanan puanı burada tutacağız
+
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
 
     public TripReport(UUID id,
                       UUID driverId,
@@ -94,6 +104,9 @@ public class TripReport {
     }
 
     public void markVoided() {
+        if (this.voided) {
+            return; // already voided, idempotent
+        }
         this.voided = true;
     }
 
@@ -108,6 +121,7 @@ public class TripReport {
                 ", nightTrip=" + nightTrip +
                 ", start=" + startedAt +
                 ", end=" + endedAt +
+                ", voided=" + voided +
                 '}';
     }
 }

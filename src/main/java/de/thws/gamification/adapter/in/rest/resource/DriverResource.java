@@ -1,20 +1,23 @@
 package de.thws.gamification.adapter.in.rest.resource;
 
-import de.thws.gamification.adapter.in.rest.dto.request.SubmitTripRequestDTO;
+import de.thws.gamification.adapter.in.rest.dto.request.CreateDriverRequestDTO;
 import de.thws.gamification.adapter.in.rest.dto.response.DriverProfileResponseDTO;
-import de.thws.gamification.adapter.in.rest.dto.response.SubmitTripResponseDTO;
 import de.thws.gamification.adapter.in.rest.mapper.DriverWebMapper;
-import de.thws.gamification.adapter.in.rest.mapper.TripWebMapper;
-import de.thws.gamification.application.ports.in.SubmitTripReportUseCase;
+import de.thws.gamification.application.ports.in.ManageDriverUseCase;
 import de.thws.gamification.application.ports.in.ViewDriverProfileQuery;
-import de.thws.gamification.domain.service.GamificationResult;
+
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import jakarta.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.UriInfo;
+import java.net.URI;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Path("/api/drivers")
 @Produces(MediaType.APPLICATION_JSON)
@@ -22,27 +25,134 @@ import java.util.UUID;
 public class DriverResource {
 
     @Inject
-    SubmitTripReportUseCase submitTripReportUseCase;
-
-    @Inject
     ViewDriverProfileQuery viewDriverProfileQuery;
 
-    @POST
-    @Path("/{driverId}/trips")
-    public Response submitTrip(@PathParam("driverId") UUID driverId,
-                               @Valid SubmitTripRequestDTO body) {
+    @Inject
+    ManageDriverUseCase manageDriverUseCase;
 
-        var report = TripWebMapper.toDomain(driverId, body);
-        GamificationResult result = submitTripReportUseCase.submitTrip(driverId, report);
+    @Inject
+    DriverWebMapper driverMapper;
 
-        SubmitTripResponseDTO response = TripWebMapper.toResponse(driverId, result);
-        return Response.status(Response.Status.CREATED).entity(response).build();
+    @Context
+    UriInfo uriInfo;
+
+    //"The API must implement filtering"
+    // GET /api/drivers?username=ism&role=DRIVER&minScore=50 could be good example acording to seeder
+    @GET
+    public Response getAllDrivers(
+            @QueryParam("username") String username,
+            @QueryParam("role") String role,
+            @QueryParam("minScore") Integer minScore,
+            @Context SecurityContext securityContext) {
+
+        /* im not sure only admin should see it but if has to:
+        if (!securityContext.isUserInRole("ADMIN")) {
+             return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        */
+
+        var drivers = viewDriverProfileQuery.searchDrivers(username, role, minScore);
+
+        //adding links
+        List<DriverProfileResponseDTO> responseDTOs = drivers.stream()
+                .map(driver -> {
+                    DriverProfileResponseDTO dto = driverMapper.toDTO(driver);
+                    addDriverLinks(dto, driver.getId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return Response.ok(responseDTOs).build();
     }
+
+    // (REGISTER) process ---
+    @POST
+    public Response createDriver(@Valid CreateDriverRequestDTO request) {
+        var createdDriver = manageDriverUseCase.createDriver(request.username, request.password);
+        DriverProfileResponseDTO responseDTO = driverMapper.toDTO(createdDriver);
+        addDriverLinks(responseDTO, createdDriver.getId());
+        String selfUrl = getDriverUrl(createdDriver.getId());
+        return Response.created(URI.create(selfUrl)).entity(responseDTO).build();
+    }
+
+    @DELETE
+    @Path("/{driverId}")
+    public Response deleteDriver(@PathParam("driverId") UUID driverId,
+                                 @Context SecurityContext securityContext) {
+
+        // MANUEL security
+        if (!securityContext.isUserInRole("ADMIN")) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("{\"message\": \"Access Denied: Only ADMIN can delete drivers.\"}")
+                    .build();
+        }
+
+        manageDriverUseCase.deleteDriver(driverId);
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @Path("/{driverId}")
+    public Response updateDriver(@PathParam("driverId") UUID driverId,
+                                 @Valid CreateDriverRequestDTO request,
+                                 @Context SecurityContext securityContext) {
+
+        // still MANUEL security
+        boolean isDriver = securityContext.isUserInRole("DRIVER");
+        boolean isAdmin = securityContext.isUserInRole("ADMIN");
+
+        if (!isDriver && !isAdmin) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        var updatedDriver = manageDriverUseCase.updateDriver(driverId, request.username);
+        DriverProfileResponseDTO responseDTO = driverMapper.toDTO(updatedDriver);
+        addDriverLinks(responseDTO, driverId);
+        return Response.ok(responseDTO).build();
+    }
+
 
     @GET
     @Path("/{driverId}/profile")
-    public DriverProfileResponseDTO getProfile(@PathParam("driverId") UUID driverId) {
+    public Response getProfile(@PathParam("driverId") UUID driverId,
+                               @Context SecurityContext securityContext) {
+
+        // MANUEL GÜVENLİK
+        boolean isDriver = securityContext.isUserInRole("DRIVER");
+        boolean isAdmin = securityContext.isUserInRole("ADMIN");
+
+        if (!isDriver && !isAdmin) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
         var driver = viewDriverProfileQuery.getProfile(driverId);
-        return DriverWebMapper.toResponse(driver);
+        DriverProfileResponseDTO responseDTO = driverMapper.toDTO(driver);
+        addDriverLinks(responseDTO, driverId);
+
+        return Response.ok(responseDTO).build();
+    }
+
+   //methods for  dry principe
+    private void addDriverLinks(DriverProfileResponseDTO dto, UUID driverId) {
+        // HATEOAS: Self link
+        dto.addLink("self", getDriverUrl(driverId));
+        // HATEOAS: Trips link (Sürücünün sürüşleri)
+        dto.addLink("trips", getTripsUrl(driverId));
+    }
+
+    private String getDriverUrl(UUID driverId) {
+        return uriInfo.getBaseUriBuilder()
+                .path(DriverResource.class)
+                .path(driverId.toString() + "/profile")
+                .build()
+                .toString();
+    }
+
+    private String getTripsUrl(UUID driverId) {
+        return uriInfo.getBaseUriBuilder()
+                .path(TripResource.class)
+                .path("driver/" + driverId.toString())
+                .build()
+                .toString();
     }
 }

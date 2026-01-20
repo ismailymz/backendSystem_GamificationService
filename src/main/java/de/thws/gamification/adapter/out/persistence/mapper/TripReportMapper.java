@@ -24,7 +24,9 @@ public class TripReportMapper {
         e.setHardAccelerationCount(report.getHardAccelerationCount());
         e.setNightTrip(report.isNightTrip());
         e.setStartedAt(report.getStartedAt());
+        e.setPoints(report.getTotalScore());
         e.setEndedAt(report.getEndedAt());
+        e.setVoided(report.isVoided());
         return e;
     }
 
@@ -34,8 +36,9 @@ public class TripReportMapper {
 
     //To Domain
 
-    public TripReport toDomain(TripReportEntity tripReportEntity){
-        return new TripReport(
+    public TripReport toDomain(TripReportEntity tripReportEntity) {
+
+        TripReport report = new TripReport(
                 tripReportEntity.getId(),
                 tripReportEntity.getDriver().getId(),
                 tripReportEntity.getDistanceKm(),
@@ -45,8 +48,17 @@ public class TripReportMapper {
                 tripReportEntity.getStartedAt(),
                 tripReportEntity.getEndedAt()
         );
-    }
 
+        // Veritabanındaki puanı Domain nesnesine aktarıyoruz.
+        // Bu olmazsa, veritabanında puan olsa bile kod içinde göremeyiz.
+        report.setTotalScore(tripReportEntity.getPoints());
+
+        if (tripReportEntity.isVoided()) {
+            report.markVoided();
+        }
+
+        return report;
+    }
     public List<TripReport> toDomains(List<TripReportEntity> tripReportEntities){
         return tripReportEntities.stream().map(this::toDomain).toList();
     }

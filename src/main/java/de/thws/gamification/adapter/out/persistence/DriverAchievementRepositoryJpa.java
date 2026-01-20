@@ -10,37 +10,36 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
 import java.util.UUID;
+
 @ApplicationScoped
 public class DriverAchievementRepositoryJpa implements DriverAchievementRepository {
+
     @Inject
     EntityManager entityManager;
+
     @Inject
     DriverAchievementMapper mapper;
 
-
     @Override
-    public List<DriverAchievement> findByDriverId(UUID driverId){
-
+    public List<DriverAchievement> findByDriverId(UUID driverId) {
+        // getResultList() asla null dönmez, boş liste döner. O yüzden null check kaldırdık.
         final var driversFound = entityManager.createQuery(
-                   "SELECT da FROM DriverAchievementEntity da WHERE da.driver.id = :driverId",
-                           DriverAchievementEntity.class)
-                   .setParameter("driverId", driverId)
-                   .getResultList();
-        if(driversFound==null){
-            throw new NotFoundException("Driver not found: "+ driverId);
-        }
-           return mapper.toDomains(driversFound);
+                        "SELECT da FROM DriverAchievementEntity da WHERE da.driver.id = :driverId",
+                        DriverAchievementEntity.class)
+                .setParameter("driverId", driverId)
+                .getResultList();
+
+        return mapper.toDomains(driversFound);
     }
 
-@Transactional //Do it completely or not at all. - Erdil
     @Override
-    public void saveAll(List<DriverAchievement> achievements){
+    @Transactional
+    public void saveAll(List<DriverAchievement> achievements) {
         if (achievements == null || achievements.isEmpty()) return;
-        for(DriverAchievement da: achievements){
+        for (DriverAchievement da : achievements) {
             DriverProfileEntity driverRef =
                     entityManager.getReference(DriverProfileEntity.class, da.getDriverId());
 
@@ -48,7 +47,20 @@ public class DriverAchievementRepositoryJpa implements DriverAchievementReposito
                     entityManager.getReference(AchievementEntity.class, da.getAchievement().getId());
 
             DriverAchievementEntity entity = mapper.toEntity(da, driverRef, achRef);
-            entityManager.persist(entity);
+            entityManager.merge(entity);
         }
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteByDriverId(UUID driverId) {
+        // JPQL ile toplu silme işlemi
+        entityManager.createQuery("DELETE FROM DriverAchievementEntity da WHERE da.driver.id = :driverId")
+                .setParameter("driverId", driverId)
+                .executeUpdate();
+
+        // Silme işlemini veritabanına yansıt, replay yaparken çakışma olmamasi icin yaptik
+        entityManager.flush();
     }
 }

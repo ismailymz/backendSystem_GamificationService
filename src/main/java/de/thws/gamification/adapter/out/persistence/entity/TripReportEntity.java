@@ -30,6 +30,21 @@ public class TripReportEntity {
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 
+    @Column(nullable = false)
+    private boolean voided;
+    //i had to add this for points and leaderboard but it still shoul be fixed
+    @Column(name = "points", nullable = false, columnDefinition = "integer default 0")
+    private int points;
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+
     public TripReportEntity() {
 
     }
@@ -58,6 +73,9 @@ public class TripReportEntity {
     public LocalDateTime getEndedAt() {
         return endedAt;
     }
+    public boolean isVoided() {
+        return voided;
+    }
 
     //setter ---------------
     public void setId(UUID id) {
@@ -83,6 +101,9 @@ public class TripReportEntity {
     }
     public void setEndedAt(LocalDateTime endedAt) {
         this.endedAt = endedAt;
+    }
+    public void setVoided(boolean voided) {
+        this.voided = voided;
     }
 
 

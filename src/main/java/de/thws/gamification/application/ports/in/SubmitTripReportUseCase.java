@@ -6,9 +6,5 @@ import de.thws.gamification.domain.service.GamificationResult;
 import java.util.UUID;
 
 public interface SubmitTripReportUseCase {
-
-
-
-
    GamificationResult submitTrip(UUID driverId, TripReport report);
 }

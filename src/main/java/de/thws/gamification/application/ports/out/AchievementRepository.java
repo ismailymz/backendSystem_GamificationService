@@ -9,4 +9,5 @@ public interface AchievementRepository {
 
     List<Achievement> findAll();
     Optional<Achievement> findByCode(String code);
+    void save(Achievement achievement);
 }
