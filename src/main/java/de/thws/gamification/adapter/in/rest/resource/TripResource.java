@@ -89,7 +89,7 @@ public class TripResource {
             @DefaultValue("10") @QueryParam("size") int size,
             @Context SecurityContext securityContext) { // <-- EKLENDİ
 
-        // DRIVER veya ADMIN olmalı
+
         boolean isDriver = securityContext.isUserInRole("DRIVER");
         boolean isAdmin = securityContext.isUserInRole("ADMIN");
 

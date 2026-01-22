@@ -24,12 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @QuarkusTest
 @TestTransaction
 public class TripReportJpaTest {
-    @Inject
-    DriverProfileMapper driverMapper;
+
     @Inject
     DriverProfileRepository driverRepo;
-    @Inject
-    TripReportMapper reportMapper;
+
     @Inject
     TripReportRepository reportRepo;
 
@@ -155,6 +153,7 @@ public class TripReportJpaTest {
     }
 //    List<TripReport> findTripsByCursor(UUID driverId, int limit, CursorUtils.DecodedCursor cursor);
 //    List<LeaderboardEntry> getLeaderboardByDate(LocalDateTime fromDate);
+
 
 
 }
