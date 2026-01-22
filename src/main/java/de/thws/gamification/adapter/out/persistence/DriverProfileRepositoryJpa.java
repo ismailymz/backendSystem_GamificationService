@@ -39,9 +39,10 @@ DriverProfileMapper mapper;
     @Transactional
     @Override
     public DriverProfile save(DriverProfile driverProfile){
-        final var entity = mapper.toEntity(driverProfile);
-        entityManager.merge(entity);
-        return mapper.toDomain(entity);
+        DriverProfileEntity managed =
+                entityManager.merge(mapper.toEntity(driverProfile));
+
+        return mapper.toDomain(managed);
     }
     @Override
     public List<DriverProfile> searchDrivers(String usernameFilter, String roleFilter, Integer minScore) {
@@ -76,6 +77,8 @@ DriverProfileMapper mapper;
         DriverProfileEntity entity = entityManager.find(DriverProfileEntity.class, id);
         if (entity != null) {
             entityManager.remove(entity);
+            entityManager.flush();
+            entityManager.clear();
             return true;
         }
         return false;
@@ -95,6 +98,7 @@ DriverProfileMapper mapper;
             return Optional.empty();
         }
     }
+
 
 
 }

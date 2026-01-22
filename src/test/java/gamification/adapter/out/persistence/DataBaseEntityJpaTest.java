@@ -31,12 +31,13 @@ class DataBaseEntityJpaTest {
     @Test
     @Transactional
     void shouldCreateTwoDomainObjectsPerEntity_thenMapAndPersist() {
-
+        step("0) Achievements count = " +
+                em.createQuery("select count(a) from AchievementEntity a", Long.class).getSingleResult());
         step("1) DOMAIN oluşturma");
 
         /* -------------------- DOMAIN: 2 DriverProfile -------------------- */
-        DriverProfile d1 = DriverProfile.createProfile("driver_one");
-        DriverProfile d2 = DriverProfile.createProfile("driver_two");
+        DriverProfile d1 = DriverProfile.createProfile("driver_one", "123abc");
+        DriverProfile d2 = DriverProfile.createProfile("driver_two", "abc123");
         info("DriverProfile domain oluşturuldu: d1=" + d1);
         info("DriverProfile domain oluşturuldu: d2=" + d2);
 

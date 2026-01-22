@@ -30,6 +30,7 @@ public class TripReportEntity {
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 
+
     @Column(nullable = false)
     private boolean voided;
     //i had to add this for points and leaderboard but it still shoul be fixed

@@ -12,6 +12,9 @@ import jakarta.transaction.Transactional;
 import org.jboss.logging.Logger;
 
 import java.util.UUID;
+import io.quarkus.arc.profile.UnlessBuildProfile;
+@UnlessBuildProfile("test")
+
 
 @ApplicationScoped
 public class DevDataSeeder {
@@ -42,7 +45,7 @@ public class DevDataSeeder {
                     SAFE_DRIVER_ID,
                     "SAFE_DRIVER",
                     "Unbreakable", //erdil's idea
-                    "Completed 5 trips without hard brakes"
+                    "Completed 5 trips without hard brakes!"
             );
             achievementRepository.save(safeDriverBadge);
         }

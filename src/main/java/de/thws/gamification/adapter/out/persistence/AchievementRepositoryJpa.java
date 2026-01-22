@@ -39,7 +39,7 @@ public class AchievementRepositoryJpa implements AchievementRepository {
         entity.setName(achievement.getName());
         entity.setDescription(achievement.getDescription());
 
-        //merge
+        //merge (!)
         em.merge(entity);
     }
 
