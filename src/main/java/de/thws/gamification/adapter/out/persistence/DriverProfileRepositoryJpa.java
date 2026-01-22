@@ -36,14 +36,33 @@ DriverProfileMapper mapper;
         return mapper.toDomains(driversFound);
     }
 
-    @Transactional
     @Override
-    public DriverProfile save(DriverProfile driverProfile){
-        DriverProfileEntity managed =
-                entityManager.merge(mapper.toEntity(driverProfile));
+    @Transactional
+    public DriverProfile save(DriverProfile driverProfile) {
+        // 1. Veritabanındaki GERÇEK ve DOLU kaydı çekiyoruz (Tripleri bilen kayıt)
+        DriverProfileEntity entity = entityManager.find(DriverProfileEntity.class, driverProfile.getId());
 
-        return mapper.toDomain(managed);
+        if (entity == null) {
+            // Eğer ilk defa oluşturuluyorsa (Register), o zaman Mapper kullanabiliriz.
+            entity = mapper.toEntity(driverProfile);
+            entityManager.persist(entity);
+        } else {
+            // 2. Eğer kayıt varsa, listelere DOKUNMADAN sadece değişen alanları güncelliyoruz.
+            entity.setTotalPoints(driverProfile.getTotalPoints());
+            entity.setUsername(driverProfile.getUsername());
+            entity.setRole(driverProfile.getRole());
+            // Şifre değişecekse: entity.setPassword(driverProfile.getPassword());
+
+            // DİKKAT: entity.setTripReports(...) ASLA YAPMIYORUZ!
+        }
+
+        // 3. flush() diyerek değişikliği garantiliyoruz.
+        entityManager.flush();
+
+        // 4. Güncel halini geri dönüyoruz
+        return mapper.toDomain(entity);
     }
+
     @Override
     public List<DriverProfile> searchDrivers(String usernameFilter, String roleFilter, Integer minScore) {
 

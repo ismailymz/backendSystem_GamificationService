@@ -72,7 +72,9 @@ public class DriverResource {
         DriverProfileResponseDTO responseDTO = driverMapper.toDTO(createdDriver);
         addDriverLinks(responseDTO, createdDriver.getId());
         String selfUrl = getDriverUrl(createdDriver.getId());
-        return Response.created(URI.create(selfUrl)).entity(responseDTO).build();
+        return Response.created(URI.create(selfUrl)) //status should 201 (Note for testing)
+                .entity(responseDTO)
+                .build();
     }
 
     @DELETE

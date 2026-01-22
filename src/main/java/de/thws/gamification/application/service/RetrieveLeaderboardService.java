@@ -6,6 +6,7 @@ import de.thws.gamification.application.ports.out.TripReportRepository;
 import de.thws.gamification.domain.model.DriverProfile;
 import de.thws.gamification.domain.model.LeaderboardEntry;
 import de.thws.gamification.domain.model.Period;
+import io.quarkus.cache.CacheInvalidateAll;
 import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -28,7 +29,7 @@ public class RetrieveLeaderboardService implements RetrieveLeaderboardQuery {
     }
 
     @Override
-    @CacheResult(cacheName = "leaderboard")
+    @CacheInvalidateAll(cacheName = "leaderboard")
     public List<LeaderboardEntry> getLeaderboard(Period period) {
 
         List<LeaderboardEntry> rawList;

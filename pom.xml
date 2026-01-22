@@ -39,6 +39,13 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-rest</artifactId>
         </dependency>
+        <!-- ONLY FOR INTEGRATION TESTING, i wanted to use httpclient -E.K. -->
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
 
         <!-- JSON -->
         <dependency>
@@ -77,10 +84,6 @@
             <scope>test</scope>
         </dependency>
         <!-- Hibernate ORM (JPA) -->
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>io.quarkus</groupId>

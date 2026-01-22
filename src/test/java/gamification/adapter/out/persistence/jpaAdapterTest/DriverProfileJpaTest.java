@@ -7,6 +7,8 @@ import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -23,6 +25,8 @@ public class DriverProfileJpaTest {
     DriverProfileMapper mapper;
     @Inject
     DriverProfileRepository repo;
+    @Inject EntityManager em;
+
 
 
     //save, deleteById, findByUsername

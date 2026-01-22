@@ -39,7 +39,6 @@ public class TripReportJpaTest {
 //public static TripReport newReport(UUID driverId, int distanceKm, int brakeCount, int hardAccelerationCount, boolean nightTrip, LocalDateTime startedAt, LocalDateTime endedAt)
 //TripReport report = TripReport.newReport(driver.getId(), 110, 3,4,true, LocalDateTime.of(2026,1,22,9,10), LocalDateTime.of(2026,1,22,9,50));
     @Test
-
     void persistTripReportAndFindByIdAndFindByDriverId(){
         DriverProfile driver = DriverProfile.createProfile("Erdil", "erdil123");
         driverRepo.save(driver);

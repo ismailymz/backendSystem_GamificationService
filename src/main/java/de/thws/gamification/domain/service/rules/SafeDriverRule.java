@@ -16,7 +16,7 @@ import java.util.Optional;
 public class SafeDriverRule implements AchievementRule {
 
     private static final String BADGE_CODE = "SAFE_DRIVER";
-    private static final int REQUIRED_TRIPS = 5;
+    private static final int REQUIRED_TRIPS = 4;
 
     @Inject
     TripReportRepository tripRepository;
