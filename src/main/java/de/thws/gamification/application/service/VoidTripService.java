@@ -33,12 +33,12 @@ public class VoidTripService implements VoidTripUseCase {
     public void voidTrip(UUID tripId) {
 
         if (tripId == null) {
-            throw new IllegalArgumentException("trip id 0 olamaz");
+            throw new IllegalArgumentException("Trip Id can't be null");
         }
 
         TripReport report = tripReportRepository.findById(tripId)
                 .orElseThrow(() ->
-                        new NoSuchElementException("trip bulunamadı:" + tripId));
+                        new NoSuchElementException("Trip Not found" + tripId));
 
         //idempotent
         if (report.isVoided()) {
@@ -50,7 +50,7 @@ public class VoidTripService implements VoidTripUseCase {
 
         var driver = driverProfileRepository.findById(report.getDriverId())
                 .orElseThrow(() ->
-                        new NoSuchElementException("driver bulunamadı"));
+                        new NoSuchElementException("Driver not found"));
 
         //Driver state reset
         driver.resetPoints();
