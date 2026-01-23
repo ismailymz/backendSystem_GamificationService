@@ -1,4 +1,4 @@
-package gamification.domain.service;
+package gamification.domain;
 
 import de.thws.gamification.domain.model.DriverProfile;
 import de.thws.gamification.domain.model.TripReport;
