@@ -45,11 +45,11 @@ public class DriverResource {
             @QueryParam("minScore") Integer minScore,
             @Context SecurityContext securityContext) {
 
-        /* im not sure only admin should see it but if has to:
+        //Only admin can access all drivers data
         if (!securityContext.isUserInRole("ADMIN")) {
              return Response.status(Response.Status.FORBIDDEN).build();
         }
-        */
+
 
         var drivers = viewDriverProfileQuery.searchDrivers(username, role, minScore);
 
@@ -123,11 +123,16 @@ public class DriverResource {
         boolean isDriver = securityContext.isUserInRole("DRIVER");
         boolean isAdmin = securityContext.isUserInRole("ADMIN");
 
-        if (!isDriver && !isAdmin) {
+
+
+        var driver = viewDriverProfileQuery.getProfile(driverId);
+
+        //checking if usernames match when role is DRIVER
+        String loggedInUsername = securityContext.getUserPrincipal().getName();
+        if ( !(loggedInUsername.equals(driver.getUsername())) && isDriver && !isAdmin) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        var driver = viewDriverProfileQuery.getProfile(driverId);
         DriverProfileResponseDTO responseDTO = driverMapper.toDTO(driver);
         addDriverLinks(responseDTO, driverId);
 
