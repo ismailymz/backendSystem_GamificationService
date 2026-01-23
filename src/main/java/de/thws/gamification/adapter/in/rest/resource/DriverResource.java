@@ -103,7 +103,9 @@ public class DriverResource {
         boolean isDriver = securityContext.isUserInRole("DRIVER");
         boolean isAdmin = securityContext.isUserInRole("ADMIN");
 
-        if (!isDriver && !isAdmin) {
+        var driver = viewDriverProfileQuery.getProfile(driverId);
+        String loggedInUsername = securityContext.getUserPrincipal().getName();
+        if  ( !(loggedInUsername.equals(driver.getUsername())) && isDriver && !isAdmin) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
