@@ -19,8 +19,7 @@ public class ManageDriverService implements ManageDriverUseCase {
     @Override
     @Transactional
     public DriverProfile createDriver(String username, String password) {
-        // DÜZELTME new DriverProfile(...) yerine Factory Method kullanıyoruz.
-        // Bu sayede şifre atanıyor ve Rol otomatik olarak "DRIVER" oluyor.
+
         DriverProfile newDriver = DriverProfile.createProfile(username, password);
 
         driverRepository.save(newDriver);

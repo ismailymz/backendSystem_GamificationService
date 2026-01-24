@@ -20,10 +20,10 @@ public class ViewDriverProfileService implements ViewDriverProfileQuery {
     @Override
     public DriverProfile getProfile(UUID driverId){
         if (driverId==null){
-            throw new IllegalArgumentException("driverıd kann nicht null sein");
+            throw new IllegalArgumentException("Driver Id cannot be null");
         }
             return driverProfileRepository.findById(driverId)
-                    .orElseThrow(()-> new NoSuchElementException("drivercannot found:"+driverId));
+                    .orElseThrow(()-> new NoSuchElementException("driver cannot found:"+driverId));
 
 
     }
